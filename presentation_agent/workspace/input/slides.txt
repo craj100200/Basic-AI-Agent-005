@@ -1,0 +1,31 @@
+[SLIDE_START]
+[TITLE_START]Introduction[TITLE_END]
+Welcome to the presentation.
+This is slide one.
+We will cover the basics.
+Let's get started.
+[SLIDE_END]
+
+[SLIDE_START]
+[TITLE_START]Features[TITLE_END]
+Feature one: Easy to use.
+Feature two: Fast performance.
+Feature three: Cross-platform.
+Feature four: Customizable.
+[SLIDE_END]
+
+[SLIDE_START]
+[TITLE_START]Architecture[TITLE_END]
+The system has three layers.
+Presentation, logic, and data.
+Each layer is independent.
+Scalable and modular design.
+[SLIDE_END]
+
+[SLIDE_START]
+[TITLE_START]Conclusion[TITLE_END]
+Thank you for your attention.
+We hope you enjoyed it.
+Questions are welcome.
+Feedback appreciated.
+[SLIDE_END]
