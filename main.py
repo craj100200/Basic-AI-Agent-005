@@ -5,7 +5,7 @@ from fastapi.responses import FileResponse
 from fastapi.responses import JSONResponse
 
 
-from presentation_agent.tools.slide_renderer import render_slide
+from presentation_agent.tools.slide_renderer import render_slide, render_all_slides
 from presentation_agent.tools.slide_parser import parse_slides
 
 
@@ -19,6 +19,9 @@ app = FastAPI()
 # Folder where input files are stored
 INPUT_DIR = Path("presentation_agent/workspace/input")
 INPUT_DIR.mkdir(parents=True, exist_ok=True)
+# Output folder
+OUTPUT_DIR = Path("presentation_agent/workspace/output")
+OUTPUT_DIR.mkdir(parents=True, exist_ok=True)
 
 
 @app.get("/")
@@ -63,4 +66,27 @@ def api_parse_slides(filename: str):
 
     except Exception as e:
         logger.exception("Slide parsing failed")
+        raise HTTPException(status_code=500, detail=str(e))
+
+
+@app.get("/render_all_slides")
+def api_render_slides(filename: str):
+    """
+    Parse the slides from a text file and render them to images.
+    Returns the list of generated slide image filenames.
+    Example: /render_slides?filename=slides.txt
+    """
+    try:
+        file_path = INPUT_DIR / filename
+        if not file_path.exists():
+            raise HTTPException(status_code=404, detail=f"{filename} not found in {INPUT_DIR}")
+
+        slides = parse_slides(file_path)
+        paths = render_all_slides(slides, OUTPUT_DIR)
+
+        # Return only filenames
+        return {"slides": [Path(p).name for p in paths]}
+
+    except Exception as e:
+        logger.exception("Slide rendering failed")
         raise HTTPException(status_code=500, detail=str(e))
