@@ -20,7 +20,7 @@ def create_video(slide_paths: list, output_path: Path):
             raise ValueError("No slides provided for video creation")
 
         clip = ImageSequenceClip(slide_paths, fps=FPS)
-        clip = clip.set_duration(DURATION_PER_SLIDE)  # uniform duration per slide
+        clip = clip.with_duration(DURATION_PER_SLIDE)  # uniform duration per slide
 
         clip.write_videofile(str(output_path), codec="libx264")
 
