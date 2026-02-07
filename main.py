@@ -2,6 +2,8 @@ import logging
 from pathlib import Path
 from fastapi import FastAPI
 from fastapi.responses import FileResponse
+from fastapi.responses import JSONResponse
+
 
 from presentation_agent.tools.slide_renderer import render_slide
 from presentation_agent.tools.slide_parser import parse_slides
