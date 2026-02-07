@@ -6,7 +6,7 @@ logger = logging.getLogger(__name__)
 
 # Video configuration
 FPS = 1  # 1 slide per second; adjust as needed
-DURATION_PER_SLIDE = 3  # seconds per slide
+DURATION_PER_SLIDE = 15  # seconds per slide
 
 
 def create_video(slide_paths: list, output_path: Path):
