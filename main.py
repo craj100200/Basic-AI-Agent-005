@@ -7,6 +7,7 @@ from fastapi.responses import JSONResponse
 
 from presentation_agent.tools.slide_renderer import render_slide, render_all_slides
 from presentation_agent.tools.slide_parser import parse_slides
+from presentation_agent.tools.video_renderer import create_video
 
 
 # Logging
@@ -22,7 +23,8 @@ INPUT_DIR.mkdir(parents=True, exist_ok=True)
 # Output folder
 OUTPUT_DIR = Path("presentation_agent/workspace/output")
 OUTPUT_DIR.mkdir(parents=True, exist_ok=True)
-
+VIDEO_DIR = Path("presentation_agent/workspace/video")
+VIDEO_DIR.mkdir(parents=True, exist_ok=True)
 
 @app.get("/")
 def home():
@@ -90,3 +92,38 @@ def api_render_slides(filename: str):
     except Exception as e:
         logger.exception("Slide rendering failed")
         raise HTTPException(status_code=500, detail=str(e))
+
+
+@app.get("/generate_video")
+def api_generate_video(slide_filename: str, video_name: str = "presentation.mp4"):
+    """
+    Generate an MP4 video from slides in slides.txt
+    Example: /generate_video?slide_filename=slides.txt&video_name=demo.mp4
+    """
+    try:
+        input_file = INPUT_DIR / slide_filename
+        if not input_file.exists():
+            raise HTTPException(status_code=404, detail=f"{slide_filename} not found")
+
+        slides = parse_slides(input_file)
+        slide_images = render_all_slides(slides, OUTPUT_DIR)
+
+        video_path = VIDEO_DIR / video_name
+        create_video(slide_images, video_path)
+
+        return {"video_file": video_name}
+
+    except Exception as e:
+        logger.exception("Video generation failed")
+        raise HTTPException(status_code=500, detail=str(e))
+
+
+@app.get("/download_video/{video_name}")
+def download_video(video_name: str):
+    """
+    Download the generated video by name
+    """
+    video_path = VIDEO_DIR / video_name
+    if not video_path.exists():
+        raise HTTPException(status_code=404, detail=f"{video_name} not found")
+    return FileResponse(video_path)
